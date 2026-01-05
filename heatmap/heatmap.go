@@ -37,7 +37,7 @@ var defaultColorScale = []lipgloss.Color{
 	lipgloss.Color("#CCCCCC"),
 	lipgloss.Color("#DDDDDD"),
 	lipgloss.Color("#EEEEEE"),
-	lipgloss.Color("#FFFFFFF"), // white
+	lipgloss.Color("#FFFFFF"), // white
 }
 
 // GetDefaultColorScale returns the current default color scale used by all heatmaps.
