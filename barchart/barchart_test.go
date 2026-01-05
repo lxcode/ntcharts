@@ -13,7 +13,8 @@ func TestBarchart(t *testing.T) {
 	h := 10
 	bw := 3 // will be auto updated
 	max := 50.0
-	scale := float64(h) / max
+	// scale is calculated using origin.Y which is h - 2 when showAxis is true (default)
+	scale := float64(h-2) / max
 	bc := New(w, h, WithMaxValue(max), WithBarWidth(bw))
 
 	if bc.Width() != w {
@@ -53,7 +54,7 @@ func TestBarchart(t *testing.T) {
 	}
 
 	max = 66.6
-	scale = float64(h) / max
+	scale = float64(h-2) / max
 	bc.Push(BarData{
 		Label: "GreaterThanMaxValue",
 		Values: []BarValue{
@@ -95,7 +96,8 @@ func TestBarNoAutoMaxValue(t *testing.T) {
 	w := 6
 	h := 10
 	max := 50.0
-	scale := float64(h) / max
+	// scale is calculated using origin.Y which is h - 2 when showAxis is true (default)
+	scale := float64(h-2) / max
 	bc := New(w, h, WithMaxValue(max), WithNoAutoMaxValue())
 
 	bc.Push(BarData{
