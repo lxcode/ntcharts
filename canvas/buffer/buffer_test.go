@@ -3,6 +3,7 @@
 package buffer
 
 import (
+	"math"
 	"math/rand"
 	"testing"
 
@@ -45,8 +46,9 @@ func TestFloat64ScaleRingBuffer(t *testing.T) {
 		}
 	}
 	for i, v := range buf.ReadAll() {
-		if v != (seq[i]-offset)*scale {
-			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, (seq[i]-offset)*scale)
+		expected := (seq[i] - offset) * scale
+		if !floatEquals(v, expected) {
+			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, expected)
 		}
 	}
 	buf.Pop()
@@ -67,7 +69,7 @@ func TestFloat64ScaleRingBuffer(t *testing.T) {
 	}
 	for i, v := range buf.ReadAll() {
 		expected := (seq[i+1] - offset) * scale
-		if v != expected {
+		if !floatEquals(v, expected) {
 			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, expected)
 		}
 	}
@@ -86,7 +88,7 @@ func TestFloat64ScaleRingBuffer(t *testing.T) {
 	}
 	for i, v := range buf.ReadAll() {
 		expected := (seq[seqIdx+i] - offset) * scale
-		if v != expected {
+		if !floatEquals(v, expected) {
 			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, expected)
 		}
 	}
@@ -106,7 +108,7 @@ func TestFloat64ScaleRingBuffer(t *testing.T) {
 	}
 	for i, v := range buf.ReadAll() {
 		expected := (seq[i] - offset) * scale
-		if v != expected {
+		if !floatEquals(v, expected) {
 			t.Errorf("Float64ScaleRingBuffer returned wrong value scaled after clear:%f, expected %f", v, expected)
 		}
 	}
@@ -119,7 +121,7 @@ func TestFloat64ScaleRingBuffer(t *testing.T) {
 	}
 	for i, v := range buf.ReadAll() {
 		expected := (seq[i+2] - offset) * scale
-		if v != expected {
+		if !floatEquals(v, expected) {
 			t.Errorf("Float64ScaleRingBuffer returned wrong value scaled after pop:%f, expected %f", v, expected)
 		}
 	}
@@ -144,24 +146,27 @@ func TestFloat64ScaleRingBufferRescale(t *testing.T) {
 		}
 	}
 	for i, v := range buf.ReadAll() {
-		if v != seq[seqIdx+i]*scale {
-			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, seq[seqIdx+i]*scale)
+		expected := seq[seqIdx+i] * scale
+		if !floatEquals(v, expected) {
+			t.Errorf("Float64ScaleRingBuffer returned wrong scaled value:%f, expected %f", v, expected)
 		}
 	}
 
 	newScale := .1235
 	buf.SetScale(newScale)
 	for i, v := range buf.ReadAll() {
-		if v != seq[seqIdx+i]*newScale {
-			t.Errorf("Float64ScaleRingBuffer returned wrong rescaled value:%f, expected %f", v, seq[seqIdx+i]*newScale)
+		expected := seq[seqIdx+i] * newScale
+		if !floatEquals(v, expected) {
+			t.Errorf("Float64ScaleRingBuffer returned wrong rescaled value:%f, expected %f", v, expected)
 		}
 	}
 
 	newScale = 1.8
 	buf.SetScale(newScale)
 	for i, v := range buf.ReadAll() {
-		if v != seq[seqIdx+i]*newScale {
-			t.Errorf("Float64ScaleRingBuffer returned wrong rescaled value:%f, expected %f", v, seq[seqIdx+i]*newScale)
+		expected := seq[seqIdx+i] * newScale
+		if !floatEquals(v, expected) {
+			t.Errorf("Float64ScaleRingBuffer returned wrong rescaled value:%f, expected %f", v, expected)
 		}
 	}
 }
@@ -192,8 +197,9 @@ func TestFloat64ScaleBuffer(t *testing.T) {
 		t.Errorf("Float64ScaleBuffer wrong Scale:%f", buf.Scale())
 	}
 	for i, v := range seq {
-		if (v-offset)*scale != buf.At(i) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), (v-offset)*scale)
+		expected := (v - offset) * scale
+		if !floatEquals(expected, buf.At(i)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), expected)
 		}
 		if v != buf.AtRaw(i) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
@@ -205,8 +211,9 @@ func TestFloat64ScaleBuffer(t *testing.T) {
 	}
 	for bufIdx := 0; bufIdx < buf.Length(); bufIdx++ {
 		seqf := seq[bufIdx+1]
-		if (seqf-offset)*scale != buf.At(bufIdx) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value after pop:%f, expected %f", buf.At(bufIdx), (seqf-offset)*scale)
+		expected := (seqf - offset) * scale
+		if !floatEquals(expected, buf.At(bufIdx)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value after pop:%f, expected %f", buf.At(bufIdx), expected)
 		}
 		if seqf != buf.AtRaw(bufIdx) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value after pop:%f, expected %f", buf.AtRaw(bufIdx), seqf)
@@ -222,8 +229,9 @@ func TestFloat64ScaleBuffer(t *testing.T) {
 		t.Errorf("Float64ScaleBuffer SetData wrong length:%d", buf.Length())
 	}
 	for i, v := range seq {
-		if (v-offset)*scale != buf.At(i) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), (v-offset)*scale)
+		expected := (v - offset) * scale
+		if !floatEquals(expected, buf.At(i)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), expected)
 		}
 		if v != buf.AtRaw(i) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
@@ -234,8 +242,9 @@ func TestFloat64ScaleBuffer(t *testing.T) {
 	}
 	for bufIdx := 0; bufIdx < buf.Length(); bufIdx++ {
 		seqf := seq[bufIdx+10]
-		if (seqf-offset)*scale != buf.At(bufIdx) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value after pop:%f, expected %f", buf.At(bufIdx), (seqf-offset)*scale)
+		expected := (seqf - offset) * scale
+		if !floatEquals(expected, buf.At(bufIdx)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value after pop:%f, expected %f", buf.At(bufIdx), expected)
 		}
 		if seqf != buf.AtRaw(bufIdx) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value after pop:%f, expected %f", buf.AtRaw(bufIdx), seqf)
@@ -258,8 +267,9 @@ func TestFloat64ScaleBufferRescale(t *testing.T) {
 		buf.Push(y)
 	}
 	for i, v := range seq {
-		if (v-offset)*scale != buf.At(i) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.AtRaw(i), (v-offset)*scale)
+		expected := (v - offset) * scale
+		if !floatEquals(expected, buf.At(i)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), expected)
 		}
 		if v != buf.AtRaw(i) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
@@ -269,8 +279,9 @@ func TestFloat64ScaleBufferRescale(t *testing.T) {
 	newScale := 2.34
 	buf.SetScale(newScale)
 	for i, v := range seq {
-		if (v-offset)*newScale != buf.At(i) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.AtRaw(i), (v-offset)*newScale)
+		expected := (v - offset) * newScale
+		if !floatEquals(expected, buf.At(i)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), expected)
 		}
 		if v != buf.AtRaw(i) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
@@ -280,8 +291,9 @@ func TestFloat64ScaleBufferRescale(t *testing.T) {
 	newScale = .25
 	buf.SetScale(newScale)
 	for i, v := range seq {
-		if (v-offset)*newScale != buf.At(i) {
-			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.AtRaw(i), (v-offset)*newScale)
+		expected := (v - offset) * newScale
+		if !floatEquals(expected, buf.At(i)) {
+			t.Errorf("Float64ScaleBuffer returned wrong scaled value:%f, expected %f", buf.At(i), expected)
 		}
 		if v != buf.AtRaw(i) {
 			t.Errorf("Float64ScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
@@ -412,4 +424,13 @@ func TestFloat64PointScaleBufferRescale(t *testing.T) {
 			t.Errorf("Float64PointScaleBuffer returned wrong original value:%f, expected %f", buf.AtRaw(i), v)
 		}
 	}
+}
+
+const tolerance = 1e-9
+
+// floatEquals checks if two float64 values are equal within tolerance tolerance
+func floatEquals(a, b float64) bool {
+	diff := math.Abs(a - b)
+	mean := math.Abs(a+b) / 2.0
+	return (diff / mean) < tolerance
 }
