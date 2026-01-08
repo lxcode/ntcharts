@@ -1,6 +1,7 @@
 # ntcharts - Nimble Terminal Charts
 
 <p>
+    <a href="https://github.com/NimbleMarkets/ntcharts/actions/workflows/go.yml"><img src="https://github.com/NimbleMarkets/ntcharts/actions/workflows/go.yml/badge.svg" alt="Build Status"></a>
     <a href="https://github.com/NimbleMarkets/ntcharts/tags"><img src="https://img.shields.io/github/tag/NimbleMarkets/ntcharts.svg" alt="Latest Release"></a>
     <a href="https://pkg.go.dev/github.com/NimbleMarkets/ntcharts?tab=doc"><img src="https://godoc.org/github.com/golang/gddo?status.svg" alt="GoDoc"></a>
     <a href="https://github.com/NimbleMarkets/ntcharts/blob/main/CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"  alt="Code Of Conduct"></a>
