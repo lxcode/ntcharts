@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.0 (2026-01-08)
+
+ * Bug fixes and added [GitHub Actions](https://github.com/NimbleMarkets/ntcharts/actions) to test builds
+
 ## v0.3.1 (2024-12-17)
 
  * Sanitize AoC example
