@@ -1,5 +1,14 @@
 # CHANGELOG
 
+**BubbleTea `v2` NOTE:** See the [ntcharts/v2-exp](https://github.com/NimbleMarkets/ntcharts/tree/v2-exp) branch and its [CHANGELOG](https://github.com/NimbleMarkets/ntcharts/blob/v2-exp/CHANGELOG.md).
+
+## v0.5.0 (2026-01-10)
+
+ * Fix incorrect height in streamlinechart (#7)
+
+This was teased out by adding better test scaffolding
+and then asking an LLM for help.
+
 ## v0.4.0 (2026-01-08)
 
  * Bug fixes and added [GitHub Actions](https://github.com/NimbleMarkets/ntcharts/actions) to test builds
